@@ -1,30 +1,43 @@
 import { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 import "./App.css";
 
 type Controls = Record<string, number | boolean>;
 
 function App() {
-  const socket = useRef(io(":3001", { autoConnect: false }));
+  const [socketUrl, setSocketUrl] = useState("rov.local:3001");
+  const socket = useRef(io(socketUrl, { autoConnect: false }));
   const [isConnected, setIsConnected] = useState(socket.current.connected);
   const [serverControls, setServerControls] = useState({} as Controls);
   const [gamepadConnected, setGamepadConnected] = useState(false);
 
-  useEffect(() => {
-    const s = socket.current;
-    const onConnect = () => {
-      setIsConnected(true);
-    };
-    const onDisconnect = () => {
-      setIsConnected(false);
-    };
-    const onControlTimeout = () => {
-      setServerControls({ timeout: true });
-    };
+  const onConnect = () => {
+    setIsConnected(true);
+  };
+
+  const onDisconnect = () => {
+    setIsConnected(false);
+  };
+
+  const onControlTimeout = () => {
+    setServerControls({ timeout: true });
+  };
+
+  const init = (s: Socket) => {
     s.on("connect", onConnect);
     s.on("disconnect", onDisconnect);
     s.on("timeout", onControlTimeout);
+  };
+
+  const teardown = (s: Socket) => {
+    s.off("connect", onConnect);
+    s.off("disconnect", onDisconnect);
+  };
+
+  useEffect(() => {
+    const s = socket.current;
+    init(s);
 
     window.addEventListener("gamepadconnected", (e) => {
       setGamepadConnected(true);
@@ -35,8 +48,7 @@ function App() {
     });
 
     return () => {
-      s.off("connect", onConnect);
-      s.off("disconnect", onDisconnect);
+      teardown(s);
     };
   }, []);
 
@@ -71,6 +83,16 @@ function App() {
         <p>Gamepad connected: {"" + gamepadConnected}</p>
         <p>Server connected: {"" + isConnected}</p>
         <p>
+          Server URL:{" "}
+          <input
+            value={socketUrl}
+            disabled={isConnected}
+            onChange={(e) => {
+              setSocketUrl(e.target.value);
+              socket.current = io(e.target.value, { autoConnect: false });
+              init(socket.current);
+            }}
+          />{" "}
           <button
             onClick={(e) =>
               isConnected
