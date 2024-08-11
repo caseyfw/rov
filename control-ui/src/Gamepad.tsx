@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useWebSocket from "react-use-websocket";
+// import useWebSocket from "react-use-websocket";
 import { useGamepads } from "react-gamepads";
 
 type GamepadProps = {
@@ -8,13 +8,13 @@ type GamepadProps = {
 };
 
 function Gamepad({ socketUrl, connect }: GamepadProps) {
-  const { sendJsonMessage } = useWebSocket(
-    socketUrl,
-    {
-      share: true,
-    },
-    connect
-  );
+  // const { sendJsonMessage } = useWebSocket(
+  //   socketUrl,
+  //   {
+  //     share: true,
+  //   },
+  //   connect
+  // );
   const [gamepads, setGamepads] = useState<{
     [key: number]: Gamepad;
   }>({});
@@ -41,7 +41,7 @@ function Gamepad({ socketUrl, connect }: GamepadProps) {
       <p id="start">Press a button on your controller to start...</p>
       <button
         disabled={!connect}
-        onClick={() => sendJsonMessage({ a: 1, b: 2 })}
+        // onClick={() => sendJsonMessage({ a: 1, b: 2 })}
       >
         Test message
       </button>
