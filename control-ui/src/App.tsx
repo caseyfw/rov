@@ -59,7 +59,7 @@ function App() {
       const gamepad = navigator.getGamepads()[0];
       if (gamepad) {
         const buttons = gamepad.buttons.map((button) => button.pressed);
-        const axes = gamepad.axes.map((axis) => axis.toPrecision(2));
+        const axes = gamepad.axes;
         console.log("Button states: ", gamepad);
         s.emit("control", { buttons, axes }, (res: Controls) => {
           setServerControls(res);

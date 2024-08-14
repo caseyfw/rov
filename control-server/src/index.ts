@@ -1,6 +1,12 @@
 import { Server } from "socket.io";
+import { Gpio } from "pigpio";
 
-export type Controls = Record<string, number | boolean>;
+export interface Controls {
+  buttons: Array<boolean>;
+  axes: Array<number>;
+}
+
+const panServo = new Gpio(18, { mode: Gpio.OUTPUT });
 
 const duration = 1000;
 let timeoutId: NodeJS.Timeout;
@@ -23,10 +29,12 @@ io.on("connection", (socket) => {
         console.log("Timeout waiting for next command.");
         socket.emit("timeout");
       }, duration);
-      Object.keys(controls).forEach((key) => {
-        // @todo Emit control to local hardware.
-        console.log(`${key}: ${controls[key]}`);
-      });
+
+      console.log(controls);
+
+      const cameraPan = ((controls.axes[2] + 1) / 2) * 1000 + 1000;
+      panServo.servoWrite(cameraPan);
+      console.log(cameraPan);
     }
   );
 });
