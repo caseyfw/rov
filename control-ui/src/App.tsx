@@ -68,7 +68,7 @@ function App() {
     };
 
     if (isConnected === true) {
-      intervalId = setInterval(emitGamepadData, 500);
+      intervalId = setInterval(emitGamepadData, 100);
     }
 
     return () => {

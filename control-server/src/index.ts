@@ -32,9 +32,11 @@ io.on("connection", (socket) => {
 
       console.log(controls);
 
-      const cameraPan = ((controls.axes[2] + 1) / 2) * 1000 + 1000;
-      panServo.servoWrite(cameraPan);
+      const cameraPan = Math.round(
+        ((controls.axes[2] * -1 + 1) / 2) * 1000 + 1000
+      );
       console.log(cameraPan);
+      panServo.servoWrite(cameraPan);
     }
   );
 });
