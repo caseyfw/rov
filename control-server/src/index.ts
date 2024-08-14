@@ -7,6 +7,7 @@ export interface Controls {
 }
 
 const panServo = new Gpio(18, { mode: Gpio.OUTPUT });
+const tiltServo = new Gpio(23, { mode: Gpio.OUTPUT });
 
 const duration = 1000;
 let timeoutId: NodeJS.Timeout;
@@ -32,11 +33,11 @@ io.on("connection", (socket) => {
 
       console.log(controls);
 
-      const cameraPan = Math.round(
-        ((controls.axes[2] * -1 + 1) / 2) * 1000 + 1000
-      );
-      console.log(cameraPan);
-      panServo.servoWrite(cameraPan);
+      const pan = Math.round(((controls.axes[2] * -1 + 1) / 2) * 1000 + 1000);
+      const tilt = Math.round(((controls.axes[5] * -1 + 1) / 2) * 1000 + 1000);
+      console.log(pan, tilt);
+      panServo.servoWrite(pan);
+      tiltServo.servoWrite(tilt);
     }
   );
 });
