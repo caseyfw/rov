@@ -5,6 +5,8 @@ export interface Controls {
   buttons: Array<boolean>;
   axes: Array<number>;
 }
+const rMotor = new Gpio(4, { mode: Gpio.OUTPUT });
+const lMotor = new Gpio(17, { mode: Gpio.OUTPUT });
 
 const panServo = new Gpio(18, { mode: Gpio.OUTPUT });
 const tiltServo = new Gpio(23, { mode: Gpio.OUTPUT });
@@ -33,6 +35,21 @@ io.on("connection", (socket) => {
 
       console.log(controls);
 
+      // RC movement handling.
+      const steeringAxis = controls.axes[0];
+      let steerL = 0;
+      let steerR = 0;
+      if (steeringAxis > 0) {
+        steerL = 0;
+        steerR = Math.round(255 * steeringAxis);
+      } else {
+        steerL = Math.round(255 * steeringAxis * -1);
+        steerR = 0;
+      }
+      lMotor.pwmWrite(steerL);
+      rMotor.pwmWrite(steerR);
+
+      // Camera handling.
       const pan = Math.round(((controls.axes[2] * -1 + 1) / 2) * 1000 + 1000);
       const tilt = Math.round(((controls.axes[5] * -1 + 1) / 2) * 1000 + 1000);
       console.log(pan, tilt);

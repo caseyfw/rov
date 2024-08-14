@@ -6,8 +6,8 @@ import "./App.css";
 type Controls = Record<string, number | boolean>;
 
 function App() {
-  const [socketUrl, setSocketUrl] = useState("rov.local:3001");
-  const socket = useRef(io(socketUrl, { autoConnect: false }));
+  const [host, setHostUrl] = useState("rov.local");
+  const socket = useRef(io(host + ":3001", { autoConnect: false }));
   const [isConnected, setIsConnected] = useState(socket.current.connected);
   const [serverControls, setServerControls] = useState({} as Controls);
   const [gamepadConnected, setGamepadConnected] = useState(false);
@@ -78,6 +78,12 @@ function App() {
 
   return (
     <div className="App">
+      <iframe
+        title="video"
+        src={`http://${host}:8889/cam`}
+        width="640"
+        height="480"
+      ></iframe>
       <div className="Control">
         <h2>Control</h2>
         <p>Gamepad connected: {"" + gamepadConnected}</p>
@@ -85,10 +91,10 @@ function App() {
         <p>
           Server URL:{" "}
           <input
-            value={socketUrl}
+            value={host}
             disabled={isConnected}
             onChange={(e) => {
-              setSocketUrl(e.target.value);
+              setHostUrl(e.target.value);
               socket.current = io(e.target.value, { autoConnect: false });
               init(socket.current);
             }}
