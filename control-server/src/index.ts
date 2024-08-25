@@ -8,6 +8,9 @@ export interface Controls {
 const rMotor = new Gpio(4, { mode: Gpio.OUTPUT });
 const lMotor = new Gpio(17, { mode: Gpio.OUTPUT });
 
+const fMotor = new Gpio(27, { mode: Gpio.OUTPUT });
+const bMotor = new Gpio(22, { mode: Gpio.OUTPUT });
+
 const panServo = new Gpio(18, { mode: Gpio.OUTPUT });
 const tiltServo = new Gpio(23, { mode: Gpio.OUTPUT });
 
@@ -48,6 +51,20 @@ io.on("connection", (socket) => {
       }
       lMotor.pwmWrite(steerL);
       rMotor.pwmWrite(steerR);
+
+      // RC movement handling.
+      const drivingAxis = controls.axes[1];
+      let driveF = 0;
+      let driveB = 0;
+      if (drivingAxis > 0) {
+        driveF = 0;
+        driveB = Math.round(255 * drivingAxis);
+      } else {
+        driveF = Math.round(255 * drivingAxis * -1);
+        driveB = 0;
+      }
+      fMotor.pwmWrite(driveF);
+      bMotor.pwmWrite(driveB);
 
       // Camera handling.
       const pan = Math.round(((controls.axes[2] * -1 + 1) / 2) * 1000 + 1000);
