@@ -5,14 +5,14 @@ export interface Controls {
   buttons: Array<boolean>;
   axes: Array<number>;
 }
-const rMotor = new Gpio(4, { mode: Gpio.OUTPUT });
-const lMotor = new Gpio(17, { mode: Gpio.OUTPUT });
+const rMotor = new Gpio(22, { mode: Gpio.OUTPUT });
+const lMotor = new Gpio(23, { mode: Gpio.OUTPUT });
 
-const fMotor = new Gpio(27, { mode: Gpio.OUTPUT });
-const bMotor = new Gpio(22, { mode: Gpio.OUTPUT });
+const fMotor = new Gpio(17, { mode: Gpio.OUTPUT });
+const bMotor = new Gpio(27, { mode: Gpio.OUTPUT });
 
-const panServo = new Gpio(18, { mode: Gpio.OUTPUT });
-const tiltServo = new Gpio(23, { mode: Gpio.OUTPUT });
+const panServo = new Gpio(5, { mode: Gpio.OUTPUT });
+const tiltServo = new Gpio(6, { mode: Gpio.OUTPUT });
 
 const duration = 1000;
 let timeoutId: NodeJS.Timeout;
