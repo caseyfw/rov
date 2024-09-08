@@ -11,8 +11,8 @@ const lMotor = new Gpio(23, { mode: Gpio.OUTPUT });
 const fMotor = new Gpio(17, { mode: Gpio.OUTPUT });
 const bMotor = new Gpio(27, { mode: Gpio.OUTPUT });
 
-const panServo = new Gpio(5, { mode: Gpio.OUTPUT });
-const tiltServo = new Gpio(6, { mode: Gpio.OUTPUT });
+const panServo = new Gpio(24, { mode: Gpio.OUTPUT });
+const tiltServo = new Gpio(25, { mode: Gpio.OUTPUT });
 
 const duration = 1000;
 let timeoutId: NodeJS.Timeout;
